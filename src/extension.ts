@@ -6,6 +6,7 @@ import { SidebarReadabilityProvider } from "./SidebarReadabilityProvider";
 import { SidebarLinksProvider } from "./SidebarLinksProvider";
 import { runHeuristics } from "./heuristics";
 import suggestComments from "./suggestComments";
+// import suggestComments from "./suggestComments";
 
 const createFile = () => {
   var workspace = vscode.workspace?.workspaceFolders;
@@ -173,7 +174,7 @@ export function activate(context: vscode.ExtensionContext) {
     //         vscode.window.showErrorMessage(err);
     //         return;
     //       }
-    //       predictions = runHeuristics(content);
+    //       predictions = runHeuristics(content, "");
     //       fs.writeFile(
     //         path.join(outputPath, filename.split(".")[0] + ".txt"),
     //         predictions,
@@ -224,25 +225,30 @@ export function activate(context: vscode.ExtensionContext) {
     });
   });
 
-  vscode.commands.registerCommand("violet-to-green.suggestComments", async () => {
-    const editor = vscode.window.activeTextEditor;
+  vscode.commands.registerCommand(
+    "violet-to-green.suggestComments",
+    async () => {
+      const editor = vscode.window.activeTextEditor;
 
-    const javaText = editor?.document.getText();
-    var workspace = vscode.workspace?.workspaceFolders;
-    if (workspace === null || workspace === undefined) {
-      vscode.window.showErrorMessage("No workspace found");
-      return;
+      const javaText = editor?.document.getText();
+      var workspace = vscode.workspace?.workspaceFolders;
+      if (workspace === null || workspace === undefined) {
+        vscode.window.showErrorMessage("No workspace found");
+        return;
+      }
+      var filepath = path.join(
+        workspace[0].uri.fsPath,
+        "violettogreen.config.json"
+      );
+      const root = vscode.workspace?.workspaceFolders![0].uri.fsPath;
+      await suggestComments(
+        javaText!,
+        path.relative(root, editor?.document.uri.fsPath!),
+        path.relative(root, filepath!),
+        root
+      );
     }
-    var filepath = path.join(
-      workspace[0].uri.fsPath,
-      "violettogreen.config.json"
-    );
-    const root = vscode.workspace?.workspaceFolders![0].uri.fsPath;
-    await suggestComments(javaText!, path.relative(root, editor?.document.uri.fsPath!), path.relative(root, filepath!), root);
-
-  });
+  );
 }
-
-
 
 export function deactivate() {}

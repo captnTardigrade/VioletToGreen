@@ -411,17 +411,25 @@ export const runHeuristics = (javaText: string, uri: string) => {
           if (notContainsKeyword(nextNonEmpty, comment, codeSampler.forLoops)) {
             continue findLinks;
           }
-          if (notContainsKeyword(nextNonEmpty, comment, codeSampler.whileLoops)) {
+          if (
+            notContainsKeyword(nextNonEmpty, comment, codeSampler.whileLoops)
+          ) {
             continue findLinks;
           }
-          if (notContainsKeyword(nextNonEmpty, comment, codeSampler.doStatements)) {
+          if (
+            notContainsKeyword(nextNonEmpty, comment, codeSampler.doStatements)
+          ) {
             continue findLinks;
           }
         }
 
         // third link it if the next line is a conditional statement
         if (
-          notContainsKeyword(nextNonEmpty, comment, codeSampler.ifElseStatements)
+          notContainsKeyword(
+            nextNonEmpty,
+            comment,
+            codeSampler.ifElseStatements
+          )
         ) {
           continue findLinks;
         }
@@ -430,7 +438,11 @@ export const runHeuristics = (javaText: string, uri: string) => {
         }
         // third link it if the next line is a conditional statement
         if (
-          notContainsKeyword(nextNonEmpty, comment, codeSampler.switchStatements)
+          notContainsKeyword(
+            nextNonEmpty,
+            comment,
+            codeSampler.switchStatements
+          )
         ) {
           continue findLinks;
         }
@@ -615,12 +627,16 @@ export const runHeuristics = (javaText: string, uri: string) => {
     } else {
       if (!commentText?.includes("above")) {
         // if the current line is a declaration statement
-        if (notContainsKeywordInline(comment, codeSampler.initAndDeclStatements)) {
+        if (
+          notContainsKeywordInline(comment, codeSampler.initAndDeclStatements)
+        ) {
           continue findLinks;
         }
 
         // if the current line is an assignment statement
-        if (notContainsKeywordInline(comment, codeSampler.assignmentStatements)) {
+        if (
+          notContainsKeywordInline(comment, codeSampler.assignmentStatements)
+        ) {
           continue findLinks;
         }
 
