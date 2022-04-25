@@ -44,7 +44,7 @@ async function suggestComments(
   await axios
     .post("http://localhost:3000/suggest_comments", payload)
     .then((response) => {
-      console.log(response);
+      console.log("response", response);
     });
 
   return "nothing yet";
