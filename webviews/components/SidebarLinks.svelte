@@ -1,7 +1,7 @@
 <!-- script is required for compilation -->
 <script lang="ts">
   import { onMount } from "svelte";
-
+ 
   tsvscode.postMessage({
     type: "requestForConfigLinks",
     value: "",

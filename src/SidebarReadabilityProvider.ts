@@ -33,11 +33,6 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
-        case "request": {
-          const editor = vscode.window.activeTextEditor;
-          const selectionString = editor?.document.getText(editor.selection);
-          break;
-        }
       }
     });
   }
