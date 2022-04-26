@@ -241,12 +241,17 @@ export function activate(context: vscode.ExtensionContext) {
         "violettogreen.config.json"
       );
       const root = vscode.workspace?.workspaceFolders![0].uri.fsPath;
-      await suggestComments(
+      const result = await suggestComments(
         javaText!,
         path.relative(root, editor?.document.uri.fsPath!),
         path.relative(root, filepath!),
-        root
+        root,
+        vscode.window.activeTextEditor?.document.fileName!
       );
+      sidebarReadabilityProvider._view?.webview.postMessage({
+        type: "commentSuggestions",
+        value: result,
+      });
     }
   );
 }
