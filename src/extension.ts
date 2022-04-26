@@ -84,17 +84,17 @@ export function activate(context: vscode.ExtensionContext) {
   //   new vscode.Range(new vscode.Position(1, 1), new vscode.Position(2, 4)),
   // ]);
 
-  const collection = vscode.languages.createDiagnosticCollection("test");
-  if (vscode.window.activeTextEditor) {
-    updateDiagnostics(vscode.window.activeTextEditor.document, collection);
-  }
-  context.subscriptions.push(
-    vscode.window.onDidChangeActiveTextEditor((editor) => {
-      if (editor) {
-        updateDiagnostics(editor.document, collection);
-      }
-    })
-  );
+  // const collection = vscode.languages.createDiagnosticCollection("test");
+  // if (vscode.window.activeTextEditor) {
+  //   updateDiagnostics(vscode.window.activeTextEditor.document, collection);
+  // }
+  // context.subscriptions.push(
+  //   vscode.window.onDidChangeActiveTextEditor((editor) => {
+  //     if (editor) {
+  //       updateDiagnostics(editor.document, collection);
+  //     }
+  //   })
+  // );
 
   const sidebarLinksProvider = new SidebarLinksProvider(context.extensionUri);
   const sidebarSelectionProvider = new SidebarSelectionProvider(
@@ -248,6 +248,7 @@ export function activate(context: vscode.ExtensionContext) {
         root,
         vscode.window.activeTextEditor?.document.fileName!
       );
+      console.log("results", result);
       sidebarReadabilityProvider._view?.webview.postMessage({
         type: "commentSuggestions",
         value: result,
