@@ -15,6 +15,20 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
+    const collection = vscode.languages.createDiagnosticCollection("test");
+
+    function updateDiagnostics(
+      document: vscode.TextDocument,
+      collection: vscode.DiagnosticCollection,
+      list: any
+    ): void {
+      if (document) {
+        collection.set(document.uri, list);
+      } else {
+        collection.clear();
+      }
+    }
+
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage((data: any) => {
@@ -32,6 +46,64 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
           }
           vscode.window.showErrorMessage(data.value);
           break;
+        }
+        case "gotoLine": {
+          var openFile = data.value.filepath;
+          console.log("file", openFile);
+          // break;
+          vscode.workspace.openTextDocument(openFile).then((doc) => {
+            vscode.window
+              .showTextDocument(doc, { viewColumn: vscode.ViewColumn.One })
+              .then(() => {
+                let editor = vscode.window.activeTextEditor;
+                let rangeStart = editor?.document.lineAt(
+                  parseInt(data.value.startLine)
+                ).range;
+                const pos1 = new vscode.Position(
+                  data.value.startLine,
+                  Math.max(0, data.value.startCharacter - 1)
+                );
+                const pos2 = new vscode.Position(
+                  data.value.endLine,
+                  data.value.endCharacter
+                );
+                editor!.selection = new vscode.Selection(pos1, pos2);
+                editor?.revealRange(rangeStart!);
+              });
+          });
+          break;
+        }
+        case "addSquiggles": {
+          collection.clear();
+          if (vscode.window.activeTextEditor) {
+            const filename = vscode.window.activeTextEditor.document.fileName;
+            var list: any = [];
+
+            data.value.range.forEach((e: any, index: any) => {
+              if (filename === data.value.filepath) {
+                list.push({
+                  code: "",
+                  message: `Code has low grasp score of ${data.value.scores[index]}. We suggest inserting comments to improve comprehensibility.`,
+                  range: new vscode.Range(
+                    new vscode.Position(e.startLine - 1, e.startColumn - 1),
+                    new vscode.Position(e.endLine - 1, e.endColumn)
+                  ),
+                  severity: vscode.DiagnosticSeverity.Information,
+                  source: "",
+                  relatedInformation: [],
+                });
+              }
+            });
+
+            if (filename === data.value.filepath) {
+              updateDiagnostics(
+                vscode.window.activeTextEditor!.document,
+                collection,
+                list
+              );
+            }
+            break;
+          }
         }
       }
     });

@@ -13,10 +13,10 @@ async function suggestComments(
   root: string,
   absolutePath: string
 ) {
-  console.log("Hello from suggestComments");
-  console.log("javatext", javaText);
-  console.log("uri", uri);
-  console.log("configOut", configPath);
+  // console.log("Hello from suggestComments");
+  // console.log("javatext", javaText);
+  // console.log("uri", uri);
+  // console.log("configOut", configPath);
   configPath = path.resolve(root, configPath);
 
   var lines: string;
@@ -40,17 +40,17 @@ async function suggestComments(
     code: javaText,
     configs: configOut,
   };
-  console.log(payload);
+  // console.log(payload);
 
   const readabilityData = await axios
     .post("http://localhost:3000/suggest_comments", payload)
     .then((response) => {
       const data = response.data;
-      console.log("data : ", data);
+      // console.log("data : ", data);
       return data;
     });
 
-  return { readabilityData, absolutePath: path.relative(root, uri), javaText };
+  return { readabilityData, absolutePath, javaText };
 }
 
 export default suggestComments;
