@@ -30,6 +30,7 @@ export class SidebarSelectionProvider implements vscode.WebviewViewProvider {
 
     const root = vscode.workspace?.workspaceFolders![0].uri.fsPath;
 
+    // for communication with the UI
     webviewView.webview.onDidReceiveMessage((data: any) => {
       switch (data.type) {
         case "info": {
@@ -46,6 +47,7 @@ export class SidebarSelectionProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
+        // sending the user selection to the UI
         case "requestSelection": {
           const editor = vscode.window.activeTextEditor;
           const selectionString = editor?.document.getText(editor.selection);
@@ -69,6 +71,7 @@ export class SidebarSelectionProvider implements vscode.WebviewViewProvider {
           });
           break;
         }
+        // sending the links to the UI
         case "requestForLinks": {
           this._sidebarLinksProvider._view?.webview.postMessage({
             type: "requestForLinks",
@@ -76,6 +79,7 @@ export class SidebarSelectionProvider implements vscode.WebviewViewProvider {
           });
           break;
         }
+        // save the links and add new links to the config file
         case "addLink": {
           this._sidebarLinksProvider._view?.webview.postMessage({
             type: "saveLinks",
@@ -90,19 +94,6 @@ export class SidebarSelectionProvider implements vscode.WebviewViewProvider {
                   vscode.window.showErrorMessage(err);
                   return;
                 }
-                // var links;
-
-                // fs.readFile(filepath, (err: any, fileData: any) => {
-                //   links = JSON.parse(fileData);
-                //   if (err) {
-                //     vscode.window.showErrorMessage(err);
-                //     return;
-                //   }
-                //   this._sidebarLinksProvider._view?.webview.postMessage({
-                //     type: "configLinks",
-                //     value: links,
-                //   });
-                // });
                 this._sidebarLinksProvider._view?.webview.postMessage({
                   type: "configLinks",
                   value: links,

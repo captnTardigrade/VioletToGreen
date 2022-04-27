@@ -6,14 +6,16 @@ import { SidebarReadabilityProvider } from "./SidebarReadabilityProvider";
 import { SidebarLinksProvider } from "./SidebarLinksProvider";
 import { runHeuristics } from "./heuristics";
 import suggestComments from "./suggestComments";
-// import suggestComments from "./suggestComments";
 
+// creates the config file if it doesn't exist
 const createFile = () => {
   var workspace = vscode.workspace?.workspaceFolders;
+  // if there is no workspace, do not run the extension
   if (workspace === null || workspace === undefined) {
     vscode.window.showErrorMessage("No workspace found");
     return false;
   }
+  // creating the config file
   var filepath = path.join(
     workspace[0].uri.fsPath,
     "violettogreen.config.json"
@@ -31,76 +33,20 @@ const createFile = () => {
   return true;
 };
 
-function updateDiagnostics(
-  document: vscode.TextDocument,
-  collection: vscode.DiagnosticCollection
-): void {
-  if (document) {
-    collection.set(document.uri, [
-      {
-        code: "",
-        message: "This is a test for displaying diagnostic messages",
-        range: new vscode.Range(
-          new vscode.Position(3, 4),
-          new vscode.Position(3, 10)
-        ),
-        severity: vscode.DiagnosticSeverity.Information,
-        source: "",
-        relatedInformation: [
-          new vscode.DiagnosticRelatedInformation(
-            new vscode.Location(
-              document.uri,
-              new vscode.Range(
-                new vscode.Position(1, 8),
-                new vscode.Position(1, 9)
-              )
-            ),
-            "Additional information about the diagnostic"
-          ),
-        ],
-      },
-    ]);
-  } else {
-    collection.clear();
-  }
-}
-
+// function that activates the extension
 export function activate(context: vscode.ExtensionContext) {
   if (!createFile()) {
     return;
   }
 
-  // const decoration = vscode.window.createTextEditorDecorationType({
-  //   gutterIconPath: vscode.Uri.joinPath(
-  //     context.extensionUri,
-  //     "media",
-  //     "checklist.svg"
-  //   ).path,
-  // });
-
-  // const editor = vscode.window.activeTextEditor;
-
-  // editor?.setDecorations(decoration, [
-  //   new vscode.Range(new vscode.Position(1, 1), new vscode.Position(2, 4)),
-  // ]);
-
-  // const collection = vscode.languages.createDiagnosticCollection("test");
-  // if (vscode.window.activeTextEditor) {
-  //   updateDiagnostics(vscode.window.activeTextEditor.document, collection);
-  // }
-  // context.subscriptions.push(
-  //   vscode.window.onDidChangeActiveTextEditor((editor) => {
-  //     if (editor) {
-  //       updateDiagnostics(editor.document, collection);
-  //     }
-  //   })
-  // );
-
+  // creating a links webview panel
   const sidebarLinksProvider = new SidebarLinksProvider(context.extensionUri);
+  // creating a selection webview panel
   const sidebarSelectionProvider = new SidebarSelectionProvider(
     context.extensionUri,
     sidebarLinksProvider
   );
+  // creating a readability metrics webview panel
   const sidebarReadabilityProvider = new SidebarReadabilityProvider(
     context.extensionUri
   );
@@ -126,16 +72,15 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  // open the webview on startup
   vscode.commands.executeCommand(
     "workbench.view.extension.violet-to-green-sidebar-view"
   );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("violet-to-green.helloWorld", () => {
-      vscode.window.showInformationMessage("Hello World from VioletToGreen!");
-    })
-  );
-
+  /*
+   * command to refresh the webview
+   * (for development purposes)
+   */
   context.subscriptions.push(
     vscode.commands.registerCommand("violet-to-green.refresh", async () => {
       await vscode.commands.executeCommand("workbench.action.closeSidebar");
@@ -145,53 +90,20 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  // command to run the heuristics and link code and comments
   vscode.commands.registerCommand("violet-to-green.linkAutomatically", () => {
     const editor = vscode.window.activeTextEditor;
     const javaText = editor?.document.getText();
-    // const filesPath = path.resolve(
-    //   __dirname,
-    //   "..",
-    //   "Dataset",
-    //   "RealWorldData",
-    //   "CodeFiles"
-    // );
-    // const outputPath = path.join(
-    //   __dirname,
-    //   "..",
-    //   "Dataset",
-    //   "RealWorldData",
-    //   "Predictions"
-    // );
-    // // var filesLimit = 1;
-    // var predictions: string;
-
-    // fs.readdirSync(filesPath).forEach(function (filename: string) {
-    //   fs.readFile(
-    //     path.join(filesPath, filename),
-    //     "utf-8",
-    //     function (err: any, content: any) {
-    //       if (err) {
-    //         vscode.window.showErrorMessage(err);
-    //         return;
-    //       }
-    //       predictions = runHeuristics(content, "");
-    //       fs.writeFile(
-    //         path.join(outputPath, filename.split(".")[0] + ".txt"),
-    //         predictions,
-    //         (err: any) => {
-    //           vscode.window.showErrorMessage(err);
-    //         }
-    //       );
-    //     }
-    //   );
-    // });
 
     const workspace = vscode.workspace?.workspaceFolders;
     var filepath = path.join(
       workspace![0].uri.fsPath,
       "violettogreen.config.json"
     );
+    // the path to the config file
     const root = workspace![0].uri.fsPath;
+
+    // obtaining the automatically generated links
     const autoLinks = runHeuristics(
       javaText!,
       path.relative(root, vscode.window.activeTextEditor?.document.fileName)
@@ -205,6 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
       const json = JSON.parse(content);
 
+      // add manually generated links to the automatically generated links
       for (var i = 0; i < json.length; i++) {
         if (json[i][0].type === "manual") {
           manualLinks.push(json[i]);
@@ -212,6 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
       var finalLinks = manualLinks.concat(autoLinks);
 
+      // update the config file with the new links
       fs.writeFile(filepath, JSON.stringify(finalLinks), function (err: any) {
         if (err) {
           vscode.window.showErrorMessage(err);
@@ -225,11 +139,13 @@ export function activate(context: vscode.ExtensionContext) {
     });
   });
 
+  // command to execute comment insertion suggestions
   vscode.commands.registerCommand(
     "violet-to-green.suggestComments",
     async () => {
       const editor = vscode.window.activeTextEditor;
 
+      // getting the content of the open file
       const javaText = editor?.document.getText();
       var workspace = vscode.workspace?.workspaceFolders;
       if (workspace === null || workspace === undefined) {
@@ -240,7 +156,10 @@ export function activate(context: vscode.ExtensionContext) {
         workspace[0].uri.fsPath,
         "violettogreen.config.json"
       );
+      // the path to the config file
       const root = vscode.workspace?.workspaceFolders![0].uri.fsPath;
+
+      // obtaining the grasp scores and their code blocks
       const result = await suggestComments(
         javaText!,
         path.relative(root, editor?.document.uri.fsPath!),
@@ -248,7 +167,8 @@ export function activate(context: vscode.ExtensionContext) {
         root,
         vscode.window.activeTextEditor?.document.fileName!
       );
-      console.log("results", result);
+
+      // updating the UI with the grasp scores
       sidebarReadabilityProvider._view?.webview.postMessage({
         type: "commentSuggestions",
         value: result,

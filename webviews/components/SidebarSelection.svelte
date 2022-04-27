@@ -6,6 +6,7 @@
   var rawText1: any;
   var rawText2: any;
 
+  // utility function to format the string
   const formatString = (val: {
     string: string;
     startLine: string;
@@ -32,6 +33,7 @@
   onMount(() => {
     window.addEventListener("message", (event) => {
       const message = event.data;
+      // obtaining the selections
       if (message.type === "responseSelection" && message.value.string !== "") {
         if (text1 === "") {
           rawText1 = message.value;

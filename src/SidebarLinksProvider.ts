@@ -19,6 +19,7 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
+    // filepath of the config file
     const filepath = path.join(
       vscode.workspace?.workspaceFolders![0].uri.fsPath,
       "violettogreen.config.json"
@@ -26,6 +27,7 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
 
     const root = vscode.workspace?.workspaceFolders![0].uri.fsPath;
 
+    // utility function to set editor highlight decorations
     const decorate = (selection: any, decorationType: any, editor: any) => {
       const range = new vscode.Range(
         selection.startLine - 1,
@@ -38,6 +40,7 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
 
     var decorationType: any = [];
 
+    // utility function to create editor highlight decorations based on type
     function createDecoration(type: Number) {
       decorationType.push(
         vscode.window.createTextEditorDecorationType({
@@ -50,13 +53,19 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
     }
 
     var arrayRange: any = [];
+    var codeChanges: any = [];
+    var commentChanges: any = [];
 
+    // runs when the cursor position is changed
     vscode.window.onDidChangeTextEditorSelection((e) => {
+      // getting the position of the cursor
       var cursor = vscode.window.activeTextEditor?.selection.active;
       while (decorationType.length > 0) {
         decorationType[decorationType.length - 1].dispose();
         decorationType.pop();
       }
+
+      // creating highlights based on the cursor position
       arrayRange.forEach((range: any) => {
         if (
           (cursor?.line! + 1 > range[0].startLine &&
@@ -72,6 +81,7 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
           (cursor?.line! + 1 === range[1].endLine &&
             cursor?.character! <= range[1].endCharacter)
         ) {
+          // comparing the filepath of the currently open file
           const filepath = path.relative(
             root,
             vscode.window.activeTextEditor?.document.fileName
@@ -96,8 +106,10 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
       });
     });
 
+    // runs when the open file is saved
     vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
       const file = vscode.window.activeTextEditor?.document.fileName;
+      // updating the links and saving them to the config file
       for (var i = 0; i < arrayRange.length; i++) {
         if (
           path.resolve(arrayRange[i][0].filepath) === path.resolve(file) ||
@@ -137,14 +149,48 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
           return;
         }
       }
+
+      // generating warnings if the comment has not been updated
+      // after updating the code
+      // codeChanges = [...new Set(codeChanges)];
+
+      console.log(codeChanges);
+      for (var i = 0; i < codeChanges.length; i++) {
+        if (commentChanges.includes(codeChanges[i])) {
+          codeChanges.splice(i, 1);
+        }
+      }
+      console.log(codeChanges);
+
+      var string = "";
+      for (var i = 0; i < codeChanges.length; i++) {
+        string =
+          "Code changes detected in lines " +
+          arrayRange[codeChanges[i]][1].startLine +
+          " and " +
+          arrayRange[codeChanges[i]][1].endLine +
+          " in file " +
+          arrayRange[codeChanges[i]][1].filepath +
+          ". Please consider updating the corresponding comment";
+        vscode.window.showWarningMessage(string);
+      }
+      codeChanges = [];
+      commentChanges = [];
     });
 
+    // when the open file is changed
     vscode.workspace.onDidChangeTextDocument((event) => {
       var cursor = vscode.window.activeTextEditor?.selection.active;
-      const filepath = path.resolve(
+      const filepath = path.relative(
         root,
         vscode.window.activeTextEditor?.document.fileName
       );
+
+      /*
+       * if there is a new line inserted in any of the linked regions
+       * then the corresponding code segment highlight region is updated
+       * along with the ones below it
+       */
       if (event.contentChanges[0].text.match(/\n/g) !== null) {
         for (var i = 0; i < arrayRange.length; i++) {
           if (
@@ -208,8 +254,34 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
           }
         }
       }
+
+      // checking if the a code segment or a comment segment is updated
+      if (
+        event.contentChanges[0] !== undefined &&
+        event.contentChanges[0] !== null
+      ) {
+        for (var i = 0; i < arrayRange.length; i++) {
+          if (
+            cursor?.line! + 1 >= arrayRange[i][1].startLine &&
+            cursor?.line! + 1 <= arrayRange[i][1].endLine
+          ) {
+            if (!codeChanges.includes(i)) {
+              codeChanges.push(i);
+            }
+          }
+          if (
+            cursor?.line! + 1 >= arrayRange[i][0].startLine &&
+            cursor?.line! + 1 <= arrayRange[i][0].endLine
+          ) {
+            if (!commentChanges.includes(i)) {
+              commentChanges.push(i);
+            }
+          }
+        }
+      }
     });
 
+    // for communication with the UI
     webviewView.webview.onDidReceiveMessage((data: any) => {
       switch (data.type) {
         case "info": {
@@ -226,6 +298,7 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
+        // update the links for temporary persistence
         case "requestForConfigLinks": {
           var links;
 
@@ -242,6 +315,7 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
           });
           break;
         }
+        // update the links for permanent persistence
         case "updateConfigLinks": {
           arrayRange = data.value;
           fs.writeFile(filepath, JSON.stringify(data.value), (err: any) => {
@@ -252,10 +326,12 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
           });
           break;
         }
+        // update the links without persistence
         case "updateArrayRange": {
           arrayRange = data.value;
           break;
         }
+        // open the relevant file for highlight and navigate to the relevant line
         case "gotoLine": {
           var openFile = vscode.Uri.file(
             path.resolve(root, data.value.filepath)
@@ -281,12 +357,14 @@ export class SidebarLinksProvider implements vscode.WebviewViewProvider {
                   data.value.endLine,
                   data.value.endCharacter
                 );
+                // create a selection
                 editor!.selection = new vscode.Selection(pos1, pos2);
                 editor?.revealRange(rangeStart!);
               });
           });
           break;
         }
+        // save links to the config file
         case "saveLinks": {
           const editor = vscode.window.activeTextEditor;
           const file = editor?.document.fileName;

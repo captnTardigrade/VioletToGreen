@@ -1,103 +1,22 @@
-
 [
   [
     {
-      "startLine": 3,
-      "startCharacter": 0,
-      "endLine": 7,
-      "endCharacter": 3,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "/**\n * DynamicProgramming solution for the Egg Dropping Puzzle\n * \n * \n */",
-      "type": "auto"
-    },
-    {
-      "startLine": 8,
-      "startCharacter": 0,
-      "endLine": 87,
-      "endCharacter": 0,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "public class EggDropping {\n\n    // min trials with n eggs and m floors\n\n    private static int minTrials(int n, int m) {\n\n        int[][] eggFloor = new int[n + 1][m + 1];\n        int result, x;\n\n        for (int i = 1; i <= n; i++) {\n            eggFloor[i][0] = 0; // Zero trial for zero floor.\n            eggFloor[i][1] = 1; // One trial for one floor\n        }\n\n        // j trials for only 1 egg\n\n        for (int j = 1; j <= m; j++) {\n            eggFloor[1][j] = j;\n            System.out.println(\"output\");\n        }\n\n        // Using bottom-up approach in DP\n        for (int i = 2; i <= n; i++) {\n            for (int j = 2; j <= m; j++) {\n                eggFloor[i][j] = Integer.MAX_VALUE;\n                for (x = 1; x <= j; x++) {\n                    result = 1 + Math.max(eggFloor[i - 1][x - 1], eggFloor[i][j - x]);\n\n                    // choose min of all values for particular x\n                    if (result < eggFloor[i][j]) {\n                        eggFloor[i][j] = result;\n                    } else if (a == b) { // the above equation\n                        System.out.println(\"a==b\");\n                    } else { // this is here\n                        System.out.println(\"a!=b\");\n                    }\n                }\n            }\n        }\n\n        // in here\n        switch (x) {\n            // no keyword\n            case 0:\n                // inside case\n                System.out.println(\"0\");\n                break;\n            case 1:\n                // inside no keyword\n                System.out.println(\"1\");\n                break;\n            // this case is here\n            default:\n                System.out.println(x);\n                break;\n        }\n\n        // hello\n        do {\n            System.out.println(\"x\");\n        } while (x == 0);\n        // the above loop\n\n        while (true) {\n            System.out.println(\"\");\n        }\n\n        return eggFloor[n][m];\n    }\n\n    public static void main(String args[]) {\n        int n = 2, m = 4;\n        // result outputs min no. of trials in worst case for n eggs and m floors\n        int result = minTrials(n, m);\n        System.out.println(\n                \"Minimum number of trials in worst case with \" + n + \" eggs and \" + m + \" floors is \" + result);\n    }\n\n    // the above function is main function\n",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 10,
-      "startCharacter": 4,
-      "endLine": 10,
-      "endCharacter": 42,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// min trials with n eggs and m floors",
-      "type": "auto"
-    },
-    {
-      "startLine": 12,
-      "startCharacter": 4,
-      "endLine": 76,
-      "endCharacter": 4,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "private static int minTrials(int n, int m) {\n\n        int[][] eggFloor = new int[n + 1][m + 1];\n        int result, x;\n\n        for (int i = 1; i <= n; i++) {\n            eggFloor[i][0] = 0; // Zero trial for zero floor.\n            eggFloor[i][1] = 1; // One trial for one floor\n        }\n\n        // j trials for only 1 egg\n\n        for (int j = 1; j <= m; j++) {\n            eggFloor[1][j] = j;\n            System.out.println(\"output\");\n        }\n\n        // Using bottom-up approach in DP\n        for (int i = 2; i <= n; i++) {\n            for (int j = 2; j <= m; j++) {\n                eggFloor[i][j] = Integer.MAX_VALUE;\n                for (x = 1; x <= j; x++) {\n                    result = 1 + Math.max(eggFloor[i - 1][x - 1], eggFloor[i][j - x]);\n\n                    // choose min of all values for particular x\n                    if (result < eggFloor[i][j]) {\n                        eggFloor[i][j] = result;\n                    } else if (a == b) { // the above equation\n                        System.out.println(\"a==b\");\n                    } else { // this is here\n                        System.out.println(\"a!=b\");\n                    }\n                }\n            }\n        }\n\n        // in here\n        switch (x) {\n            // no keyword\n            case 0:\n                // inside case\n                System.out.println(\"0\");\n                break;\n            case 1:\n                // inside no keyword\n                System.out.println(\"1\");\n                break;\n            // this case is here\n            default:\n                System.out.println(x);\n                break;\n        }\n\n        // hello\n        do {\n            System.out.println(\"x\");\n        } while (x == 0);\n        // the above loop\n\n        while (true) {\n            System.out.println(\"\");\n        }\n\n        return eggFloor[n][m];\n    ",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 18,
-      "startCharacter": 32,
-      "endLine": 18,
-      "endCharacter": 61,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// Zero trial for zero floor.",
-      "type": "auto"
-    },
-    {
-      "startLine": 18,
-      "startCharacter": 12,
-      "endLine": 18,
-      "endCharacter": 29,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "eggFloor[i][0] = ",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 19,
-      "startCharacter": 32,
-      "endLine": 19,
-      "endCharacter": 58,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// One trial for one floor",
-      "type": "auto"
-    },
-    {
-      "startLine": 19,
-      "startCharacter": 12,
-      "endLine": 19,
-      "endCharacter": 29,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "eggFloor[i][1] = ",
-      "type": "auto"
-    }
-  ],
-  [
-    {
       "startLine": 22,
-      "startCharacter": 8,
       "endLine": 22,
-      "endCharacter": 34,
+      "string": "// j trials for only 1 egg(s)",
+      "startCharacter": 8,
+      "endCharacter": 37,
       "filepath": "CodeFiles/EggDropping.java",
-      "string": "// j trials for only 1 egg",
-      "type": "auto"
+      "type": "manual"
     },
     {
       "startLine": 24,
-      "startCharacter": 8,
       "endLine": 27,
-      "endCharacter": 8,
+      "string": "for (int j = 1; j <= m; j++) {\n            eggFloor[1][j] = j;\n        }",
+      "startCharacter": 8,
+      "endCharacter": 9,
       "filepath": "CodeFiles/EggDropping.java",
-      "string": "for (int j = 1; j <= m; j++) {\n            eggFloor[1][j] = j;\n            System.out.println(\"output\");\n        ",
-      "type": "auto"
+      "type": "manual"
     }
   ],
   [
@@ -122,86 +41,6 @@
   ],
   [
     {
-      "startLine": 36,
-      "startCharacter": 20,
-      "endLine": 36,
-      "endCharacter": 64,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// choose min of all values for particular x",
-      "type": "auto"
-    },
-    {
-      "startLine": 37,
-      "startCharacter": 49,
-      "endLine": 39,
-      "endCharacter": 20,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "{\n                        eggFloor[i][j] = result;\n                    ",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 41,
-      "startCharacter": 29,
-      "endLine": 41,
-      "endCharacter": 44,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// this is here",
-      "type": "auto"
-    },
-    {
-      "startLine": 41,
-      "startCharacter": 27,
-      "endLine": 43,
-      "endCharacter": 20,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "{ // this is here\n                        System.out.println(\"a!=b\");\n                    ",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 48,
-      "startCharacter": 8,
-      "endLine": 48,
-      "endCharacter": 18,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// in here",
-      "type": "auto"
-    },
-    {
-      "startLine": 49,
-      "startCharacter": 8,
-      "endLine": 63,
-      "endCharacter": 8,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "switch (x) {\n            // no keyword\n            case 0:\n                // inside case\n                System.out.println(\"0\");\n                break;\n            case 1:\n                // inside no keyword\n                System.out.println(\"1\");\n                break;\n            // this case is here\n            default:\n                System.out.println(x);\n                break;\n        ",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 50,
-      "startCharacter": 12,
-      "endLine": 50,
-      "endCharacter": 25,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// no keyword",
-      "type": "auto"
-    },
-    {
-      "startLine": 51,
-      "startCharacter": 12,
-      "endLine": 54,
-      "endCharacter": 21,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "case 0:\n                // inside case\n                System.out.println(\"0\");\n                break",
-      "type": "auto"
-    }
-  ],
-  [
-    {
       "startLine": 52,
       "startCharacter": 16,
       "endLine": 52,
@@ -219,86 +58,5 @@
       "string": "System.out.println(\"0\"",
       "type": "auto"
     }
-  ],
-  [
-    {
-      "startLine": 56,
-      "startCharacter": 16,
-      "endLine": 56,
-      "endCharacter": 36,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// inside no keyword",
-      "type": "auto"
-    },
-    {
-      "startLine": 57,
-      "startCharacter": 16,
-      "endLine": 57,
-      "endCharacter": 38,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "System.out.println(\"1\"",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 59,
-      "startCharacter": 12,
-      "endLine": 59,
-      "endCharacter": 32,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// this case is here",
-      "type": "auto"
-    },
-    {
-      "startLine": 60,
-      "startCharacter": 12,
-      "endLine": 62,
-      "endCharacter": 21,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "default:\n                System.out.println(x);\n                break",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 65,
-      "startCharacter": 8,
-      "endLine": 65,
-      "endCharacter": 16,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// hello",
-      "type": "auto"
-    },
-    {
-      "startLine": 66,
-      "startCharacter": 8,
-      "endLine": 68,
-      "endCharacter": 24,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "do {\n            System.out.println(\"x\");\n        } while (x == 0)",
-      "type": "auto"
-    }
-  ],
-  [
-    {
-      "startLine": 86,
-      "startCharacter": 4,
-      "endLine": 86,
-      "endCharacter": 42,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "// the above function is main function",
-      "type": "auto"
-    },
-    {
-      "startLine": 78,
-      "startCharacter": 4,
-      "endLine": 84,
-      "endCharacter": 4,
-      "filepath": "CodeFiles/EggDropping.java",
-      "string": "public static void main(String args[]) {\n        int n = 2, m = 4;\n        // result outputs min no. of trials in worst case for n eggs and m floors\n        int result = minTrials(n, m);\n        System.out.println(\n                \"Minimum number of trials in worst case with \" + n + \" eggs and \" + m + \" floors is \" + result);\n    ",
-      "type": "auto"
-    }
   ]
 ]
-

@@ -2,6 +2,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
  
+  // requesting for links on activation
   tsvscode.postMessage({
     type: "requestForConfigLinks",
     value: "",
@@ -12,6 +13,7 @@
 
   var links: any[] = [];
 
+  // removes an item from the links list
   const handleRemove = (index: any) => {
     links.splice(index, 1);
     refs.splice(index, 1);
@@ -25,6 +27,7 @@
   let _refs: any[] = [];
   $: refs = _refs.filter((el) => el);
 
+  // utility function to format the string
   const formatString = (val: {
     string: string;
     startLine: string;
@@ -44,6 +47,7 @@
     return val.string;
   };
 
+  // utility function to format the line numbers
   const formatLineNo = (val: {
     string: string;
     startLine: string;
@@ -57,6 +61,7 @@
     return str;
   };
 
+  // utility function to format the filepath
   const formatPath = (val: string) => {
     let str = val;
     if (str.length > 25) {
@@ -68,13 +73,16 @@
   onMount(() => {
     window.addEventListener("message", (event) => {
       const message = event.data;
+      // obtaining the links
       if (message.type === "configLinks") {
         links = message.value;
         tsvscode.postMessage({
           type: "updateArrayRange",
           value: links,
         });
-      } else if (message.type === "saveLinks") {
+      }
+      // saving the links
+      else if (message.type === "saveLinks") {
         tsvscode.postMessage({
           type: "saveLinks",
           value: "",

@@ -17,6 +17,7 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
 
     const collection = vscode.languages.createDiagnosticCollection("test");
 
+    // to create a diagnostic message
     function updateDiagnostics(
       document: vscode.TextDocument,
       collection: vscode.DiagnosticCollection,
@@ -31,6 +32,7 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
+    // for commumication with the UI
     webviewView.webview.onDidReceiveMessage((data: any) => {
       switch (data.type) {
         case "info": {
@@ -47,10 +49,9 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
+        // navigate to the file and to the relevant line
         case "gotoLine": {
           var openFile = data.value.filepath;
-          console.log("file", openFile);
-          // break;
           vscode.workspace.openTextDocument(openFile).then((doc) => {
             vscode.window
               .showTextDocument(doc, { viewColumn: vscode.ViewColumn.One })
@@ -73,6 +74,7 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
           });
           break;
         }
+        // update the diagnostics and add information squiggles
         case "addSquiggles": {
           collection.clear();
           if (vscode.window.activeTextEditor) {
@@ -95,6 +97,7 @@ export class SidebarReadabilityProvider implements vscode.WebviewViewProvider {
               }
             });
 
+            // creating the hoverbox and squiggles
             if (filename === data.value.filepath) {
               updateDiagnostics(
                 vscode.window.activeTextEditor!.document,

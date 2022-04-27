@@ -10,7 +10,7 @@ public class EggDropping {
     // min trials with n eggs and m floors
 
     private static int minTrials(int n, int m) {
-
+        // initializing the array
         int[][] eggFloor = new int[n + 1][m + 1];
         int result, x;
 
@@ -19,11 +19,11 @@ public class EggDropping {
             eggFloor[i][1] = 1; // One trial for one floor
         }
 
-        // j trials for only 1 egg
+        // j trials for only 2 egg(s)
 
         for (int j = 1; j <= m; j++) {
-            eggFloor[1][j] = j;
-            System.out.println("output");
+            eggFloor[2][j] = j;
+            System.out.println("2 eggs");
         }
 
         // Using bottom-up approach in DP
