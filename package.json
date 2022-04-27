@@ -116,7 +116,8 @@
   },
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0",
-    "axios": "^0.26.1",
+    "@types/axios": "^0.14.0",
+    "axios": "^0.27.1",
     "java-parser": "^2.0.1",
     "polka": "^0.5.2"
   }

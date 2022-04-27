@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { linkComments } from "./parser";
 import { CodeSampler } from "./codeSampler";
+import axios from "axios";
 
 export const runHeuristics = (javaText: string, uri: string) => {
   const parser = linkComments(javaText);
@@ -147,8 +148,14 @@ export const runHeuristics = (javaText: string, uri: string) => {
 
     // TODO!: Replace this by sending a request to the server and then
     // determining if the comment is a code snippet or not
-    const isCode = Math.random() > 0.8;
+    // const isCode = Math.random() > 0.8;
+    
+    const isCode = axios.post<String, String>(
+      "127.0.0.1:5000/guess",
+      JSON.stringify({ code: commentText })
+    ).then(response => response !== "comment");
 
+    
     // if it is a multiline and single line comment
     if (
       (!isCode && comment.type === parser?.enums.multiline) ||
