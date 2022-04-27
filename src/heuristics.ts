@@ -4,14 +4,17 @@ import { CodeSampler } from "./codeSampler";
 import axios from "axios";
 
 export const runHeuristics = (javaText: string, uri: string) => {
+  // getting all the comments in the file
   const parser = linkComments(javaText);
   const codeSampler = new CodeSampler();
   const editor = vscode.window.activeTextEditor;
   var links = [];
   var keywordsArray: string[] = [];
 
+  // getting all the blocks of appropriate Java constructs
   codeSampler.getBlocks(javaText);
 
+  // linking if the comment above has the keywords
   const containsKeyword = (
     keywords: string[],
     comment: any,
@@ -35,6 +38,7 @@ export const runHeuristics = (javaText: string, uri: string) => {
     return false;
   };
 
+  // linking if the code segment has the keywords
   const containsKeywordPrev = (
     keywords: string[],
     comment: any,
@@ -58,6 +62,7 @@ export const runHeuristics = (javaText: string, uri: string) => {
     return false;
   };
 
+  // linking the comment without keywords
   const notContainsKeyword = (
     nextNonEmpty: any,
     comment: any,
@@ -75,6 +80,7 @@ export const runHeuristics = (javaText: string, uri: string) => {
     return false;
   };
 
+  // linking inline comments
   const notContainsKeywordInline = (comment: any, codeSamplerArray: any) => {
     for (var i = 0; i < codeSamplerArray.length; i++) {
       if (codeSamplerArray[i].startLine === comment.startLine) {
@@ -88,6 +94,7 @@ export const runHeuristics = (javaText: string, uri: string) => {
     return false;
   };
 
+  // linking comments embedded inside the code block
   const containsKeywordInside = (
     keywords: any,
     comment: any,
@@ -122,6 +129,7 @@ export const runHeuristics = (javaText: string, uri: string) => {
     };
   };
 
+  // iterating through the code lines and generating links
   findLinks: for (const comment of parser?.comments!) {
     var nextNonEmpty = -1;
     var prevNonEmpty = -1;
@@ -142,6 +150,7 @@ export const runHeuristics = (javaText: string, uri: string) => {
       comment.startCharacter
     );
     const pos2 = new vscode.Position(comment.endLine - 1, comment.endCharacter);
+    // getting the text of the comment
     const commentText = editor?.document
       .getText(new vscode.Selection(pos1, pos2))
       .toLocaleLowerCase();
@@ -654,27 +663,8 @@ export const runHeuristics = (javaText: string, uri: string) => {
       }
     }
   }
-  // var annotations: string = "";
-  // for (var i = 0; i < links.length; i++) {
-  //   annotations +=
-  //     links[i][0].startLine +
-  //     "," +
-  //     links[i][0].startCharacter +
-  //     "," +
-  //     links[i][0].endLine +
-  //     "," +
-  //     links[i][0].endCharacter +
-  //     "," +
-  //     links[i][1].startLine +
-  //     "," +
-  //     links[i][1].startCharacter +
-  //     "," +
-  //     links[i][1].endLine +
-  //     "," +
-  //     links[i][1].endCharacter +
-  //     " ``\n";
-  // }
-  // return annotations;
+
+  // populating the autoLinks array generated from the above code
   var autoLinks = [];
   var pos1, pos2, selectionString1, selectionString2;
   for (var i = 0; i < links.length; i++) {
@@ -721,7 +711,8 @@ export const runHeuristics = (javaText: string, uri: string) => {
         type: "auto",
       },
     ]);
-    console.log(autoLinks);
   }
+
+  // returning the links
   return autoLinks;
 };

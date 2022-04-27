@@ -2,14 +2,15 @@
     import { onMount } from "svelte";
 
     let deleteIcon = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pjxzdmcgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojNTZiNTRlO30uY2xzLTJ7ZmlsbDojNjBjYzVhO30uY2xzLTN7ZmlsbDojNmMyZTdjO308L3N0eWxlPjwvZGVmcz48ZyBpZD0iSWNvbnMiPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTIzLDEyQTExLDExLDAsMCwxLDEsMTJhMTAuODI3LDEwLjgyNywwLDAsMSwuMjktMi41LDExLDExLDAsMCwxLDIxLjQyLDBBMTAuODI3LDEwLjgyNywwLDAsMSwyMywxMloiLz48ZWxsaXBzZSBjbGFzcz0iY2xzLTIiIGN4PSIxMiIgY3k9IjkuNSIgcng9IjEwLjcxIiByeT0iOC41Ii8+PC9nPjxnIGRhdGEtbmFtZT0iTGF5ZXIgNCIgaWQ9IkxheWVyXzQiPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTEyLDBBMTIsMTIsMCwxLDAsMjQsMTIsMTIuMDEzLDEyLjAxMywwLDAsMCwxMiwwWm0wLDIyQTEwLDEwLDAsMSwxLDIyLDEyLDEwLjAxMSwxMC4wMTEsMCwwLDEsMTIsMjJaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNMTYuMjkzLDguMjkzLDEwLDE0LjU4Niw3LjcwNywxMi4yOTNhMSwxLDAsMCwwLTEuNDE0LDEuNDE0bDMsM2ExLDEsMCwwLDAsMS40MTQsMGw3LTdhMSwxLDAsMCwwLTEuNDE0LTEuNDE0WiIvPjwvZz48L3N2Zz4="
-    // var allBlocks, suggestionsOutput;
+
     var suggestions:any;
     var filteredSuggestions:any[]=[];
     var filteredScores:any[]=[];
-    const threshold = 0.3;
+    const threshold = 0.1;
     var absolutePath:any;
     var javaText:any;
 
+    // utility function to format the string
     const formatString = (val: any) => {
     if (val.length >= 20) {
       return (
@@ -18,10 +19,10 @@
         val.substring(val.length - 8, val.length)
       );
     }
-    // console.log(val);
     return val;
   };
 
+  // function to remove a link from the list
   const handleRemove = (index: any) => {
     filteredSuggestions.splice(index, 1);
     refs.splice(index, 1);
@@ -35,28 +36,26 @@
   let _refs: any[] = [];
   $: refs = _refs.filter((el) => el);
 
+  // utility function to format the line numbers
   const formatLineNo = (val: any) => {
     let str = "【" + val.startLine + " - " + val.endLine + "】";
-    // console.log(str);
-
     return str;
   };
 
     onMount(() => {
     window.addEventListener("message", (event) => {
       const message = event.data;
+      // request to add squiggles and uodate the UI
       if (message.type === "commentSuggestions") {
         suggestions = message.value.readabilityData;
         absolutePath=message.value.absolutePath;
         javaText=message.value.javaText;
-        console.log(suggestions);
         for(let i=0;i<suggestions.allBlocks.length;i++){
           if(suggestions.suggestionsOutput[i]<threshold){
             filteredSuggestions.push(suggestions.allBlocks[i]);
             filteredScores.push(suggestions.suggestionsOutput[i]);
           }
         }
-        console.log('filteredSuggestions',filteredSuggestions);
         tsvscode.postMessage({
           type: "addSquiggles",
           value: {range: filteredSuggestions,filepath: absolutePath, scores: filteredScores},
