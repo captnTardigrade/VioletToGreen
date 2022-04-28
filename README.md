@@ -1,10 +1,12 @@
 # VioletToGreen
 
 ## About
-VioletToGreen is a VS Code extension that leverages a novel method of linking comments to code, suggesting where to insert comments and reminding to update comments when corresponding code is updated, to improve understandability and maintainability of code.
+VioletToGreen is a VS Code extension that leverages a novel method of linking comments to code, suggesting where to insert comments and reminding the developer to update comments when corresponding code is updated, to improve understandability and maintainability of code.
+
+[Demo Video](https://www.youtube.com/watch?v=hoB6W9PUY4A)
 
 ## Abstract
-The aim of the project is to improve understandability and maintainability of the code by leveraging the comments written by the user. Developers often tend to forget to update the corresponding comments after updating the code, which leads to less maintaiability over time. Our tool aims at tackling this problem in a novel way. The tool is delivered in the form of a VS Code extension which helps the programmer maintain the readability on the fly. The tool had 2 main features i.e, automatically linking the comments and code, and suggesting where to insert a commnet based on a custom readability metric. The linking of comments is done in both manual and automatic ways. For manual linking, appropriate UI has been implemented and these links will be stored in a file. For automatic linking, a few heuristic rules have been devised based on the commenting habits of a typical programmer keeping mind various cases possible including slighltly anomalous ones. For comment suggestion functionality, we are analysing various source code components (functions, blocks, loops, branchs, etc.) and predicting readability score. We use this readability score along with the code-to-comment ratio to decide whether a comment is needed or not, based on a threshold value for both the metrics. Once the linking is done, in the future if the user edits a piece of code that is linked, the tool prompts the user to update the corresponding comment. This linking is also useful when a programmer is trying to understand a code base, in which case the tool helps the user to visualize exactly which part of the code is linked to which comment.
+The aim of the project is to improve understandability and maintainability of the code by leveraging the comments written by the user. Developers often tend to forget to update the corresponding comments after updating the code, which leads to less maintaiability over time. Our tool aims at tackling this problem in a novel way. The tool is delivered in the form of a VS Code extension which helps the programmer maintain the readability on the fly. The tool has 2 main features i.e, automatically linking the comments and code, and suggesting where to insert a commnet based on a custom readability metric. The linking of comments is done in both manual and automatic ways. For manual linking, appropriate GUI has been implemented and these links will be stored in a file. For automatic linking, a few heuristic rules have been devised based on the commenting habits of a typical programmer keeping mind various cases possible including some anomalous ones. For insert comment suggestion functionality, we are analysing various source code components (functions, blocks, loops, etc.) and predicting readability score. We use this readability score along with the code-to-comment ratio to decide whether a comment is needed or not, based on a threshold value for both the metrics. Once the linking is done, in the future if the user edits a piece of code that is linked, the tool prompts the user to update the corresponding comment. This linking is also useful when a programmer is trying to understand a code base, in which case the tool helps the user to visualize exactly which part of the code is linked to which comment.
 
 ## Objectives
 The main objectives of the tool include linking code to comment either manually or automatically. Prompting the user to update a particular comment after the linked code has been modified. Suggests where to insert a comment based on the custom readability score.
@@ -32,7 +34,7 @@ The main objectives of the tool include linking code to comment either manually 
 8. The links panel also displays the automatically created links invoked by the user.
 9. Any link can be deleted by clicking on the delete icon of the corresponding link on the left panel.
 10. The links are saved in a config file so that the links will persist in all sessions of VS Code. The config file can also be shared with different users so that they will also be provided with the same links and highlights.
-11. The middle panel hosts the functionality to display suggesntions on where to insert comments, which is invoked by the user.
+11. The middle panel hosts the functionality to display suggestions on where to insert comments, which is invoked by the user.
 
 <img src="https://user-images.githubusercontent.com/58718144/165748692-da5943fe-07f3-46bc-bff2-6db8da8246a1.png" height="380px"></img>
 
@@ -53,7 +55,7 @@ The main objectives of the tool include linking code to comment either manually 
 1. The extension becomes active on VS Code startup and the webview side panel will open up.
 2. The links generated are stored in a file called violettogreen.config.json. Sharing this file will enable other users to view all the links created by different users.
 3. The *Link Automatically* command sends the code to the server which runs an ML model to detect whether a comment is a commented out code snippet or not.
-4. The *Suggest Insert Comments* also sends the code to the server that parses the file and calculates the RUM metric for each construct in Java.
+4. The *Suggest Insert Comments* also sends the code to the server that parses the file and calculates the RUM metric, comment to code ratio for each sample snippet and returns this value to the client.
 
 ## Instructions
 
