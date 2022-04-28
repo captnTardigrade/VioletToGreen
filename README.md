@@ -29,13 +29,28 @@ The main objectives of the tool include linking code to comment either manually 
 
 <img src="https://user-images.githubusercontent.com/58718144/161591435-4a15b5a5-3caa-4938-9334-1b5ac6256233.png" height="380px"></img>
 
-8. Any link can be deleted by clicking on the delete icon of the corresponding link on the left panel.
-9. The links are saved in a config file so that the links will persist in all sessions of VS Code. The config file can also be shared with different users so that they will also be provided with the same links and highlights.
-10. The middle panel will be used to display suggestions on inserting comments in release 2. The UI also has the provision to highlight an entire code segment with information squiggles to represent high complexity of understandability.
+8. The links panel also displays the automatically created links invoked by the user.
+9. Any link can be deleted by clicking on the delete icon of the corresponding link on the left panel.
+10. The links are saved in a config file so that the links will persist in all sessions of VS Code. The config file can also be shared with different users so that they will also be provided with the same links and highlights.
+11. The middle panel hosts the functionality to display suggesntions on where to insert comments, which is invoked by the user.
+
+<img src="https://user-images.githubusercontent.com/58718144/165748692-da5943fe-07f3-46bc-bff2-6db8da8246a1.png" height="380px"></img>
+
+12. Each list item in the middle panel is clickable and navigates to the position of the suggestion upon clicking.
+
+<img src="https://user-images.githubusercontent.com/58718144/165751465-d3c2effb-0a82-4ead-871e-cb5fa34f4af6.png" height="380px"></img>
+
+13. Each suggestion also adds an information squiggle in the editor wherever a comment insertion is required. Upon hovering, a hover box appears which displays the relevant grasp score of that code snippet.
+
+<img src="" height="380px"></img>
+
+![Uploading Screenshot from 2022-04-28 23-35-06.png…]()
+
+15. The suggestions can be individually resolved by clicking on the tick icon on the right. This will delete that particular suggestion from the list.
 
 ## Instructions
 
-1. Clone the repository.
+1. Clone this repository.
 2. Run the following commands:
 
 ```
@@ -44,4 +59,13 @@ $ npm run watch
 ```
 
 3. Click on <kbd>F5</kbd> to run.
-4. There is a command avaliable - *linkAutomatically* that will link comments and code snippets, but this feature will be integrated in release 2. On the side panel, a list icon will be present. Click on it to see the panels.
+4. Clone the [server repository](https://github.com/AASHRITH1903/VioletToGreen_Server) in a different directory.
+5. Run the following to start the server:
+
+```
+$ node server
+```
+
+## Commands
+1. *Link Automatically* will link comments and code snippets automatically based on carefully laid out heuristics.
+2. *Suggest Insert Comments* will evaluate the currently open file based on the RUM metric and provide a list of suggestions on comment insertion.
