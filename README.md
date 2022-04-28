@@ -45,6 +45,15 @@ The main objectives of the tool include linking code to comment either manually 
 <img src="https://user-images.githubusercontent.com/58718144/165754915-1d82defc-b78f-49e1-8a95-9dfb70e520b2.png" height="280px"></img>
 
 15. The suggestions can be individually resolved by clicking on the tick icon on the right. This will delete that particular suggestion from the list.
+16. The extension displays a warning message in case the user has modified the code and has not modified the corresponding linked comment. This check is triggered after every save file event.
+
+<img src="https://user-images.githubusercontent.com/58718144/165757063-824ba3f2-b100-4bee-8e72-ffcb04572ed3.png" height="300px"></img>
+
+## Other Features
+1. The extension becomes active on VS Code startup and the webview side panel will open up.
+2. The links generated are stored in a file called violettogreen.config.json. Sharing this file will enable other users to view all the links created by different users.
+3. The *Link Automatically* command sends the code to the server which runs an ML model to detect whether a comment is a commented out code snippet or not.
+4. The *Suggest Insert Comments* also sends the code to the server that parses the file and calculates the RUM metric for each construct in Java.
 
 ## Instructions
 
