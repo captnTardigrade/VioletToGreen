@@ -42,9 +42,7 @@ The main objectives of the tool include linking code to comment either manually 
 
 13. Each suggestion also adds an information squiggle in the editor wherever a comment insertion is required. Upon hovering, a hover box appears which displays the relevant grasp score of that code snippet.
 
-<img src="" height="380px"></img>
-
-![Uploading Screenshot from 2022-04-28 23-35-06.png…]()
+<img src="https://user-images.githubusercontent.com/58718144/165754915-1d82defc-b78f-49e1-8a95-9dfb70e520b2.png" height="280px"></img>
 
 15. The suggestions can be individually resolved by clicking on the tick icon on the right. This will delete that particular suggestion from the list.
 
